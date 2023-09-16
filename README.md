@@ -1,16 +1,7 @@
-# task_management_erra_soft_training
+# task_management_eraa_soft_training
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+https://github.com/Bthloo/Eraasoft_flutter_training/assets/89822870/c8202154-cc04-4030-9438-eb8b0dd3925c
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
