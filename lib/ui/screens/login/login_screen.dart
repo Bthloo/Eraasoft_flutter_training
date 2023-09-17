@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:task_management_erra_soft_training/ui/screens/home%20screen/home_screen.dart';
 
 import '../../../providers/auth_provider.dart';
 import '../../components/custom_form_field.dart';
 import '../../components/dialog.dart';
-import '../home screen/homeScreen.dart';
+import '../logout screen/homeScreen.dart';
 import 'MVVM/login_states.dart';
 import 'MVVM/login_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,7 +15,7 @@ class LogInScreen extends StatelessWidget {
    LogInScreen({super.key});
 static const String routeName = 'loginScreen';
   final formkey = GlobalKey<FormState>();
-  final emailController = TextEditingController(text: 'admin@admin.com');
+  final emailController = TextEditingController(text: 'mostafa@admin.com');
   final passwordController = TextEditingController(text:'password');
   var viewModel = LoginCubit();
   @override
@@ -62,7 +63,7 @@ static const String routeName = 'loginScreen';
                     userProvider.getToken();
                   //  writeSecureStorage(state.logInResponse.data?.token);
                     Navigator.of(context)
-                        .pushReplacementNamed(HomeScreen.routeName);
+                        .pushReplacementNamed(HomeSceen.routeName);
                   });
             } else if (state.logInResponse.status == false) {
               DialogUtilities.showMessage(

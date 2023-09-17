@@ -3,14 +3,14 @@
 /// email : "admin@admin.com"
 /// user_type : "admin"
 
-class Data {
-  Data({
+class ManagerDatann {
+  ManagerDatann({
       this.token,
       this.username, 
       this.email, 
       this.userType,});
 
-  Data.fromJson(dynamic json) {
+  ManagerDatann.fromJson(dynamic json) {
     token = json['token'];
     username = json['username'];
     email = json['email'];
