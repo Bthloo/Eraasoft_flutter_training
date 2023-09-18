@@ -16,7 +16,7 @@ class CreateUserCubit extends Cubit<CreateUserViewState>{
 
   }) async {
     emit(CreateUserLoadingState());
-    try{
+    //try{
       var response = await ApiManager.createUser(email: email,
           password: password,
           token: token,
@@ -25,10 +25,12 @@ class CreateUserCubit extends Cubit<CreateUserViewState>{
           userType: userType,
       );
       emit(CreateUserSuccessState(response));
-    }on TimeoutException catch (ex) {
-    emit(CreateUserFailState('Please Check Your Internet\n $ex'));
-    } catch (ex){
-      emit(CreateUserFailState('$ex'));
-    }
+      print(response);
+  //   }on TimeoutException catch (ex) {
+  //   emit(CreateUserFailState('Please Check Your Internet\n $ex'));
+  //   } catch (ex){
+  //     emit(CreateUserFailState('$ex'));
+  //   }
+  // }
   }
 }

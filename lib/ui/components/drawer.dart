@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_management_erra_soft_training/ui/screens/add%20user/add_user.dart';
+import 'package:task_management_erra_soft_training/ui/screens/update%20user/update_user.dart';
 
 import '../screens/add department/add_department.dart';
 import '../screens/update department/update_department.dart';
@@ -53,10 +54,12 @@ class CustomDrawer extends StatelessWidget {
 
             const Divider(),
             InkWell(
-                onTap: (){},
+                onTap: (){
+                  Navigator.pushNamed(context, UpdateUser.routeName);
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('Update Department',style: TextStyle(
+                  child: Text('Update User',style: TextStyle(
                       fontSize: 20
                   ),),
                 )),

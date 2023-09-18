@@ -80,6 +80,7 @@ class _AddUserState extends State<AddUser> {
                   });
             }
             else if(state.createUserResponse.status == false) {
+
               DialogUtilities.showMessage(
                 context,
                 state.createUserResponse.data!.name![0],
@@ -292,9 +293,9 @@ class _AddUserState extends State<AddUser> {
      viewModel.createUser(email: emailController.text,
          password: passwordController.text,
          name: nameController.text,
-         phone:'0949494949',
+         phone:phoneController.text,
          token: token,
-       userType: '1'
+       userType: "${userType.index}"
 
      );
 

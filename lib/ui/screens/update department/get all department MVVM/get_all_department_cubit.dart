@@ -7,7 +7,7 @@ import 'get_all_department_states.dart';
 
 class GetAllDepartmentCubit extends Cubit<GetAllDepartmentViewState>{
   GetAllDepartmentCubit(): super(GetAllDepartmentInitialState());
-  Future<void> getAllManager({required String token}) async {
+  Future<void> getAllDepartment({required String token}) async {
     emit( GetAllDepartmentLoadingState());
     try{
       var response = await ApiManager.getAllDepartment(token: token);

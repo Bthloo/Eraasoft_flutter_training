@@ -1,14 +1,14 @@
-/// id : 26
-/// user_code : "00026"
+/// id : 5
+/// user_code : "00005"
 /// name : "diaa"
-/// email : "h@hh.com"
-/// phone : 1234324
-/// status : "active"
-/// user_type : "manager"
+/// email : "a@gmail.com"
+/// phone : 2223
+/// status : "ACTIVE"
+/// user_type : "MANAGER"
 
-class Data {
-  Data({
-      this.id, 
+class UpdateUserdata {
+  UpdateUserdata({
+      this.id,
       this.userCode, 
       this.name, 
       this.email, 
@@ -16,7 +16,7 @@ class Data {
       this.status, 
       this.userType,});
 
-  Data.fromJson(dynamic json) {
+  UpdateUserdata.fromJson(dynamic json) {
     id = json['id'];
     userCode = json['user_code'];
     name = json['name'];
@@ -29,7 +29,7 @@ class Data {
   String? userCode;
   String? name;
   String? email;
-  String? phone;
+  int? phone;
   String? status;
   String? userType;
 

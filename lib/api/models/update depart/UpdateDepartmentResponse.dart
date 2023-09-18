@@ -1,20 +1,18 @@
 import 'Data.dart';
-import 'Faildata.dart';
 
-/// message : "Created"
-/// data : {"id":26,"user_code":"00026","name":"diaa","email":"h@hh.com","phone":1234324,"status":"active","user_type":"manager"}
-/// faildata : {"failemail":["The email has already been taken."],"failphone":["The phone has already been taken."],"faildepartment_id":["This department already has manager."]}
+/// message : "Updated Successfully"
+/// data : {"id":1,"name":"Department5","manager":{"id":2,"user_code":"00002","name":"diaa","email":"m@m.com","phone":2222,"status":"ACTIVE","user_type":"MANAGER"}}
 /// status : true
-/// code : 201
+/// code : 200
 
-class CreateUserResponse {
-  CreateUserResponse({
+class UpdateDepartResponse {
+  UpdateDepartResponse({
       this.message, 
-      this.data,
+      this.data, 
       this.status, 
       this.code,});
 
-  CreateUserResponse.fromJson(dynamic json) {
+  UpdateDepartResponse.fromJson(dynamic json) {
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
     status = json['status'];
@@ -37,4 +35,3 @@ class CreateUserResponse {
   }
 
 }
-enum UserTypes { admin, manager, user }

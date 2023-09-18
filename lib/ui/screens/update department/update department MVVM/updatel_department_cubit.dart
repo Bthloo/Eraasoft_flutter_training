@@ -9,17 +9,18 @@ import 'updatel_department_states.dart';
 class UpdateDepartmentCubit extends Cubit<UpdateDepartmentViewState>{
   UpdateDepartmentCubit(): super(UpdateDepartmentInitialState());
   Future<void> updateDepartment({required String token,
-    required String departmentName,
-    required int managerId,
-    required String departmentId
+   required String departmentName,
+    required String managerId,
+   // required String departmentId
   }) async {
     emit( UpdateDepartmentLoadingState());
     try{
       var response = await ApiManager.updateDepartment(
           token: token,
           departmentName: departmentName,
-          departmentId: departmentId,
-          managerId: managerId);
+         // departmentId: departmentId,
+          managerId: managerId
+      );
       emit( UpdateDepartmentSuccessState(response));
     }on TimeoutException catch (ex) {
       emit( UpdateDepartmentFailState('Please Check Your Internet\n $ex'));

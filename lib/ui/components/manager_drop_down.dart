@@ -4,20 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:task_management_erra_soft_training/api/models/get%20all%20department/GetAllDepartmentResponse.dart';
+import '../../api/models/get all department/Data.dart';
 import '../../api/models/get all users/Data.dart';
+import '../../api/models/get manager model/Data.dart';
 import '../../api/models/get manager model/new/Data.dart';
 import '../../providers/auth_provider.dart';
 
 
-class DefaultDropDown extends StatelessWidget {
+class ManagerDropDown extends StatelessWidget {
   SingleValueDropDownController controller;
   String label;
-  List<AllUsersData> list;
-  DefaultDropDown({
+  List<ManagerData> list;
+  ManagerDropDown({
     super.key,
     required this.controller,
     required this.label,
-  //  required this.hint,
+    //  required this.hint,
     required this.list,
   });
   @override
@@ -34,8 +36,8 @@ class DefaultDropDown extends StatelessWidget {
       dropDownItemCount: list.length,
       dropDownList: list.map<DropDownValueModel>((value) {
         return DropDownValueModel(
-          name: value.name??"",
-          value: value.id??''
+            name: value.name??'',
+            value: value.id??''
         );
       }).toList(),
       onChanged: (value) {

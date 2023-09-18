@@ -17,14 +17,14 @@ class GetAllDepartmentResponse {
     if (json['data'] != null) {
       data = [];
       json['data'].forEach((v) {
-        data?.add(Data.fromJson(v));
+        data?.add(AllDepartmentData.fromJson(v));
       });
     }
     status = json['status'];
     code = json['code'];
   }
   String? message;
-  List<Data>? data;
+  List<AllDepartmentData>? data;
   bool? status;
   int? code;
 

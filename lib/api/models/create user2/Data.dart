@@ -1,8 +1,8 @@
-/// id : 26
-/// user_code : "00026"
-/// name : "diaa"
-/// email : "h@hh.com"
-/// phone : 1234324
+/// id : 69
+/// user_code : "00069"
+/// name : "fgfdd"
+/// email : "lll@kl.com"
+/// phone : 2823943
 /// status : "active"
 /// user_type : "manager"
 
@@ -29,7 +29,7 @@ class Data {
   String? userCode;
   String? name;
   String? email;
-  String? phone;
+  int? phone;
   String? status;
   String? userType;
 
