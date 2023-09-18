@@ -9,10 +9,10 @@ import '../login/login_screen.dart';
 import 'MVVM/logout_cubit.dart';
 import 'MVVM/logout_states.dart';
 
-class HomeScreen extends StatelessWidget {
-   HomeScreen({super.key});
+class LogoutScreen extends StatelessWidget {
+   LogoutScreen({super.key});
    var viewModel = LogoutCubit();
-static const String routeName = 'homescreen';
+static const String routeName = 'logout';
   @override
   Widget build(BuildContext context) {
     AuthProvider userProvider = Provider.of<AuthProvider>(context);

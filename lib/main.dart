@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_management_erra_soft_training/providers/auth_provider.dart';
-import 'package:task_management_erra_soft_training/ui/screens/home%20screen/homeScreen.dart';
+import 'package:task_management_erra_soft_training/ui/screens/add%20department/add_department.dart';
+import 'package:task_management_erra_soft_training/ui/screens/add%20user/add_user.dart';
+import 'package:task_management_erra_soft_training/ui/screens/home%20screen/home_screen.dart';
+import 'package:task_management_erra_soft_training/ui/screens/logout%20screen/homeScreen.dart';
 import 'package:task_management_erra_soft_training/ui/screens/login/login_screen.dart';
+import 'package:task_management_erra_soft_training/ui/screens/update%20department/update_department.dart';
+import 'package:task_management_erra_soft_training/ui/screens/update%20user/update_user.dart';
+import 'package:task_management_erra_soft_training/ui/screens/user%20screen/user_screen.dart';
 
 void main() {
   runApp( ChangeNotifierProvider(
@@ -27,7 +33,13 @@ class MyApp extends StatelessWidget {
        initialRoute: LogInScreen.routeName,
       routes: {
         LogInScreen.routeName : (_) => LogInScreen(),
-        HomeScreen.routeName : (_) => HomeScreen()
+        LogoutScreen.routeName : (_) => LogoutScreen(),
+        HomeSceen.routeName : (_) => HomeSceen(),
+        AddUser.routeName : (_) => AddUser(),
+        AddDepartment.routeName : (_) => AddDepartment(),
+        UpdateDepartment.routeName : (_) => UpdateDepartment(),
+        UpdateUser.routeName : (_) => UpdateUser(),
+        UserScreen.routeName : (_) => UserScreen(),
       },
     );
   }
