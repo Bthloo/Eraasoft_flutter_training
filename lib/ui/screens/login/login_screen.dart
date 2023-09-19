@@ -15,7 +15,7 @@ class LogInScreen extends StatelessWidget {
    LogInScreen({super.key});
 static const String routeName = 'loginScreen';
   final formkey = GlobalKey<FormState>();
-  final emailController = TextEditingController(text: 'mostafa@admin.com');
+  final emailController = TextEditingController(text: 'mab@mab.mab');
   final passwordController = TextEditingController(text:'password');
   var viewModel = LoginCubit();
   @override
@@ -48,12 +48,14 @@ static const String routeName = 'loginScreen';
                 context,
                 state.message,
                 posstiveActionName: "ok");
-          } else if (state is LoginLoadingState) {
+          }
+          else if (state is LoginLoadingState) {
             //show loading...
             DialogUtilities.showLoadingDialog(
                 context,
                 "Loading...");
-          } else if (state is LoginSuccessState) {
+          }
+          else if (state is LoginSuccessState) {
             if (state.logInResponse.status == true) {
 
               DialogUtilities.showMessage(context, "Logedin Successfully",
@@ -61,6 +63,7 @@ static const String routeName = 'loginScreen';
                     final storage = FlutterSecureStorage();
                     await storage.write(key: 'token', value: state.logInResponse.data?.token);
                     userProvider.getToken();
+                    await storage.write(key: 'userType', value: state.logInResponse.data?.userType);
                   //  writeSecureStorage(state.logInResponse.data?.token);
                     Navigator.of(context)
                         .pushReplacementNamed(HomeSceen.routeName);

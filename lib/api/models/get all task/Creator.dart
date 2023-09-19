@@ -1,24 +1,24 @@
-/// id : 38
-/// user_code : "00038"
-/// name : "omar"
-/// email : "o@o.com"
-/// phone : 23432425
+/// id : 58
+/// user_code : "00058"
+/// name : "diaaf"
+/// email : "admin@admin.com"
+/// phone : 1010555
 /// status : "active"
-/// user_type : "manager"
+/// user_type : "admin"
+/// department_id : 0
 
-class Manager {
-  Manager({
+class Creator {
+  Creator({
       this.id, 
       this.userCode, 
       this.name, 
       this.email, 
       this.phone, 
       this.status, 
-      this.userType,
-    this.departmentId
-  });
+      this.userType, 
+      this.departmentId,});
 
-  Manager.fromJson(dynamic json) {
+  Creator.fromJson(dynamic json) {
     id = json['id'];
     userCode = json['user_code'];
     name = json['name'];

@@ -32,7 +32,7 @@ class ManagerDropDown extends StatelessWidget {
       ),
       controller: controller,
       // searchDecoration: InputDecoration(hintText: hint),
-      // enableSearch: true,
+       enableSearch: true,
       dropDownItemCount: list.length,
       dropDownList: list.map<DropDownValueModel>((value) {
         return DropDownValueModel(

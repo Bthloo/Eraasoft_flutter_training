@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:task_management_erra_soft_training/api/models/add%20department/new/AddDepartmentResponsee.dart';
+import 'package:task_management_erra_soft_training/api/models/add%20new%20task/AddNewTaskResponse.dart';
 import 'package:task_management_erra_soft_training/api/models/create%20user/CreateUserResponse.dart';
 import 'package:task_management_erra_soft_training/api/models/get%20manager%20model/GetAllManager.dart';
 import 'package:task_management_erra_soft_training/api/models/get%20manager%20model/new/GetAllManager.dart';
@@ -10,9 +11,13 @@ import '../ui/screens/add department/add_department.dart';
 import 'models/add depart/AddDepartment.dart';
 import 'models/add department/AddDepartmentResponse.dart';
 import 'models/create user2/CreateUserr.dart';
+import 'models/delete task/DeleteTaskResponse.dart';
 import 'models/get all department/GetAllDepartmentResponse.dart';
+import 'models/get all task/GetTaskResponse.dart';
+import 'models/get all tasks/GetAllTasksResponse.dart';
 import 'models/get all users/GetAllUsersResponse.dart';
 import 'models/login model/LogInResponse.dart';
+import 'models/login/LoginResponse.dart';
 import 'models/logout model/LogoutResponse.dart';
 import 'models/update depart/UpdateDepartmentResponse.dart';
 import 'models/update department/UpdateDepartmentResponse.dart';
@@ -20,14 +25,14 @@ import 'models/update users/UpdateUsersResponse.dart';
 
  class ApiManager{
 static const String baseUrl = 'tasksapp.integration25.com';
-static Future<LogInResponse>login({required String email,required String password}) async {
+static Future<LoginResponse>login({required String email,required String password}) async {
 var uri = Uri.https(baseUrl,'api/auth/login');
  var request = await http.post(uri,body:{
   'email' : email,
   'password' : password
 });
  
- var loginResponse = LogInResponse.fromJson(jsonDecode(request.body));
+ var loginResponse = LoginResponse.fromJson(jsonDecode(request.body));
  return loginResponse;
 
 }
@@ -71,7 +76,6 @@ static Future<CreateUserr>createUser({
  required String phone,
  required String password,
  required String userType,
-
 }) async {
  var uri = Uri.https(baseUrl,'api/user/store',);
  var request = await http.post(uri,headers: {
@@ -164,6 +168,61 @@ static Future<UpdateUsersResponse>updateUser({
 
  var updateUser = UpdateUsersResponse.fromJson(jsonDecode(request.body));
  return updateUser;
+
+}
+
+
+static Future<AddNewTaskResponse>addNewTask({
+ required String token,
+ required String userId,
+ required String description,
+ required String name,
+ required String startDate,
+ required String endDate,
+}) async {
+ var uri = Uri.https(baseUrl,'api/task/store',);
+ var request = await http.post(uri,headers: {
+  HttpHeaders.authorizationHeader : "Bearer $token"
+ },body: {
+  'name' : '$name',
+  'description' : "$description",
+  'status' : '0',
+  'employee_id' : "5",
+  'start_date' : '$startDate',
+  'end_date' : '$endDate',
+
+ });
+
+ var addNewTask = AddNewTaskResponse.fromJson(jsonDecode(request.body));
+ return addNewTask;
+
+}
+
+
+
+
+static Future<GetTaskResponse>getAllTasks({required String token}) async {
+ var uri = Uri.https(baseUrl,'api/task/index',);
+ var request = await http.get(uri,headers: {
+  HttpHeaders.authorizationHeader : "Bearer $token"
+ });
+
+ var getAllTasks = GetTaskResponse.fromJson(jsonDecode(request.body));
+ return getAllTasks;
+
+}
+
+
+
+
+static Future<DeleteTaskResponse>deleteTask({required String token,required int taskId}) async {
+ var uri = Uri.https(baseUrl,'api/task/delete/$taskId',);
+ var request = await http.delete(uri,headers: {
+  HttpHeaders.authorizationHeader : "Bearer $token"
+ });
+
+ var deleteTask = DeleteTaskResponse.fromJson(jsonDecode(request.body));
+ return deleteTask;
 
 }
 

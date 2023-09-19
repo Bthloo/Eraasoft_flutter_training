@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 typedef MyValidator = String? Function(String?);
@@ -8,7 +9,8 @@ class CustomFormField extends StatelessWidget {
   MyValidator validator;
   TextEditingController controller;
   TextInputType keyboardType;
-
+int minLines ;
+int maxLines ;
   IconButton? suffix;
   bool isPassword;
 
@@ -17,6 +19,8 @@ class CustomFormField extends StatelessWidget {
       required this.hintlText,
       required this.validator,
       required this.controller,
+        this.minLines = 1,
+        this.maxLines = 10,
       this.keyboardType = TextInputType.text,
       this.suffix,
       this.isPassword = false});
@@ -24,6 +28,7 @@ class CustomFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      minLines: minLines,
       textAlignVertical: TextAlignVertical.top,
       controller: controller,
       validator: validator,

@@ -1,24 +1,15 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:task_management_erra_soft_training/api/api_manager.dart';
-import 'package:task_management_erra_soft_training/ui/screens/add%20department/MVVM/add_department_cubit.dart';
-import 'package:task_management_erra_soft_training/ui/screens/add%20department/MVVM/add_department_states.dart';
 import 'package:task_management_erra_soft_training/ui/screens/update%20department/get%20all%20department%20MVVM/get_all_department_cubit.dart';
 import 'package:task_management_erra_soft_training/ui/screens/update%20department/update%20department%20MVVM/updatel_department_cubit.dart';
 import 'package:task_management_erra_soft_training/ui/screens/update%20department/update%20department%20MVVM/updatel_department_states.dart';
-import '../../../api/models/update department/UpdateDepartmentResponse.dart';
 import '../../../providers/auth_provider.dart';
-import '../../components/custom_form_field.dart';
 import '../../components/department_drop_down_menue.dart';
 import '../../components/dialog.dart';
-import '../../components/drop_menue.dart';
 import '../../components/manager_drop_down.dart';
 import '../home screen/home_screen.dart';
-import '../update user/get all user MVVM/get_all_users_states.dart';
-import '../update user/get all user MVVM/get_users_cubit.dart';
 import 'get all department MVVM/get_all_department_states.dart';
 import 'get all mamager MVVM/get_all_manager_cubit.dart';
 import 'get all mamager MVVM/get_all_managert_states.dart';
@@ -73,17 +64,16 @@ class UpdateDepartment extends StatelessWidget {
             } else if (state is UpdateDepartmentSuccessState) {
               if (state.updateDepartmentResponse.status == true) {
                 DialogUtilities.showMessage(
-                    context,
-                    state.updateDepartmentResponse.message??"",
+                    context, state.updateDepartmentResponse.message ?? "",
                     posstiveActionName: "ok", posstiveAction: () async {
                   Navigator.of(context)
                       .pushReplacementNamed(HomeSceen.routeName);
                 });
               } else if (state.updateDepartmentResponse.status == false) {
                 DialogUtilities.showMessage(
-                context,
-                state.updateDepartmentResponse.message??'',
-                posstiveActionName: 'Ok',
+                  context,
+                  state.updateDepartmentResponse.message ?? '',
+                  posstiveActionName: 'Ok',
                 );
               }
               // show dialog
@@ -121,7 +111,8 @@ assign a manager to start the work!''',
                       SizedBox(
                         height: 20,
                       ),
-                      BlocBuilder<GetAllDepartmentCubit,GetAllDepartmentViewState>(
+                      BlocBuilder<GetAllDepartmentCubit,
+                          GetAllDepartmentViewState>(
                         bloc: getAllDepartment,
                         builder: (context, state) {
                           if (state is GetAllDepartmentLoadingState) {
@@ -132,7 +123,7 @@ assign a manager to start the work!''',
                             return DepartmentDropDown(
                               controller: departmentNameController,
                               list: state.getAllDepartmentResponse.data ?? [],
-                              label: 'Select Department Department',
+                              label: 'Select Department',
                             );
                           } else {
                             return Container();
@@ -142,17 +133,17 @@ assign a manager to start the work!''',
                       SizedBox(
                         height: 20,
                       ),
-                      BlocBuilder<GetAllManagerCubit,GetAllManagerViewState>(
+                      BlocBuilder<GetAllManagerCubit, GetAllManagerViewState>(
                         bloc: getAllManagerViewModel,
                         builder: (context, state) {
                           if (state is GetAllManagerLoadingState) {
                             return CircularProgressIndicator();
                           } else if (state is GetAllManagerFailState) {
                             return Text(state.message);
-                          } else if (state is  GetAllManagerSuccessState) {
+                          } else if (state is GetAllManagerSuccessState) {
                             return ManagerDropDown(
                               controller: managerController,
-                              list: state.getAllManagerResponse.data??[],
+                              list: state.getAllManagerResponse.data ?? [],
                               label: 'Assign Manager',
                             );
                           } else {
@@ -172,7 +163,7 @@ assign a manager to start the work!''',
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () async{
+                          onPressed: () async {
                             updateDepartment(userProvider.token ?? "");
                           },
                           child: Padding(
@@ -208,9 +199,9 @@ assign a manager to start the work!''',
 
     updateDepartmentViewModel.updateDepartment(
         token: token,
-       // departmentId: departmentNameController.dropDownValue?.value,
+        // departmentId: departmentNameController.dropDownValue?.value,
         managerId: "${managerController.dropDownValue?.value}",
-        departmentName: '${departmentNameController.dropDownValue?.name}'
-    );
+        departmentName: '${departmentNameController.dropDownValue?.name}');
   }
 }
+

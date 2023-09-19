@@ -1,10 +1,11 @@
-/// id : 38
-/// user_code : "00038"
-/// name : "omar"
-/// email : "o@o.com"
-/// phone : 23432425
+/// id : 143
+/// user_code : "00143"
+/// name : "diaa"
+/// email : "test@gmail.com"
+/// phone : 1154951688
 /// status : "active"
 /// user_type : "manager"
+/// department_id : 1
 
 class Manager {
   Manager({
@@ -14,9 +15,8 @@ class Manager {
       this.email, 
       this.phone, 
       this.status, 
-      this.userType,
-    this.departmentId
-  });
+      this.userType, 
+      this.departmentId,});
 
   Manager.fromJson(dynamic json) {
     id = json['id'];

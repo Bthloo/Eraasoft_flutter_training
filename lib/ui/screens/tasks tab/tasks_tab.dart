@@ -9,7 +9,9 @@ class UsersTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child:  Expanded(
+      child:  SizedBox(
+        height: double.infinity,
+        width: double.infinity,
         child: ListView.builder(
           itemBuilder: (context, index) {
             return Column(

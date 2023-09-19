@@ -1,24 +1,22 @@
-/// id : 38
-/// user_code : "00038"
-/// name : "omar"
-/// email : "o@o.com"
-/// phone : 23432425
-/// status : "active"
-/// user_type : "manager"
+/// id : 2
+/// user_code : "00002"
+/// name : "diaa"
+/// email : "m@m.com"
+/// phone : 2222
+/// status : "ACTIVE"
+/// user_type : "MANAGER"
 
-class Manager {
-  Manager({
-      this.id, 
+class Creator {
+  Creator({
+      this.id,
       this.userCode, 
       this.name, 
       this.email, 
       this.phone, 
       this.status, 
-      this.userType,
-    this.departmentId
-  });
+      this.userType,});
 
-  Manager.fromJson(dynamic json) {
+  Creator.fromJson(dynamic json) {
     id = json['id'];
     userCode = json['user_code'];
     name = json['name'];
@@ -26,7 +24,6 @@ class Manager {
     phone = json['phone'];
     status = json['status'];
     userType = json['user_type'];
-    departmentId = json['department_id'];
   }
   int? id;
   String? userCode;
@@ -35,7 +32,6 @@ class Manager {
   int? phone;
   String? status;
   String? userType;
-  int? departmentId;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -46,7 +42,6 @@ class Manager {
     map['phone'] = phone;
     map['status'] = status;
     map['user_type'] = userType;
-    map['department_id'] = departmentId;
     return map;
   }
 
