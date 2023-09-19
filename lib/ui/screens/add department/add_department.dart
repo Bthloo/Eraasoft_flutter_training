@@ -53,9 +53,9 @@ class AddDepartment extends StatelessWidget {
     context,
     "Loading...");
     } else if (state is AddDepartmentSuccessState) {
-      if (state.addDepartmentResponse?.message =='Created') {
+      if (state.addDepartmentResponse?.status ==true) {
     DialogUtilities.showMessage(context,
-        'Added Successfully',
+        state.addDepartmentResponse?.message??"",
         posstiveActionName: "ok",
         posstiveAction: () async {
     Navigator.of(context)
@@ -65,7 +65,7 @@ class AddDepartment extends StatelessWidget {
     else if(state.addDepartmentResponse?.status == false) {
     DialogUtilities.showMessage(
     context,
-    'Something Went Wrong',
+    state.addDepartmentResponse?.message??'',
     posstiveActionName: 'Ok',
     );
     }

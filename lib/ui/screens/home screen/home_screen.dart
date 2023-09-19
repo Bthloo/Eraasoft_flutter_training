@@ -3,21 +3,17 @@ import 'package:flutter/material.dart';
 import '../../components/drawer.dart';
 import '../tasks tab/tasks_tab.dart';
 
-class HomeSceen extends StatefulWidget {
-  const HomeSceen({super.key});
+class HomeSceen extends StatelessWidget {
+   HomeSceen({super.key});
 static const String routeName = 'homescreen';
 
-  @override
-  State<HomeSceen> createState() => _HomeSceenState();
-}
-
-class _HomeSceenState extends State<HomeSceen> {
 int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return  DefaultTabController(
       length: 2,
+      initialIndex: 0,
       child: Scaffold(
         backgroundColor: Color(0xffF3FAF9),
         endDrawer: Container(
@@ -42,24 +38,8 @@ int selectedIndex = 0;
         appBar: AppBar(
           backgroundColor: Color(0xffF3FAF9),
           bottom: TabBar(
-            onTap: (value) {
-              setState(() {
-                 selectedIndex = value;
 
-              });
-
-            },
             tabs: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.person),
-                    Text('Users'),
-                  ],
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
@@ -70,7 +50,17 @@ int selectedIndex = 0;
                     Text('Tasks'),
                   ],
                 ),
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.person),
+                    Text('Users'),
+                  ],
+                ),
+              ),
             ]
           ),
 
