@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/drawer.dart';
 import '../tasks tab/tasks_tab.dart';
+import '../user screen/user_screen.dart';
 
 class HomeSceen extends StatelessWidget {
    HomeSceen({super.key});
@@ -101,7 +102,7 @@ int selectedIndex = 0;
         body: TabBarView(
 
             children: [
-              UsersTab(),
+              UserScreen(),
               UsersTab()
             ]),
       ),

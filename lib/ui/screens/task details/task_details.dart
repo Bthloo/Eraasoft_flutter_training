@@ -170,7 +170,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               SizedBox(
                 height: 160,
                 child: GridView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 200,
+                        childAspectRatio: 8 / 2,
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 4,
+                    ),
                   children: [
                     Container(
                       decoration: BoxDecoration(
@@ -305,13 +311,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       ),
                     )
 
-                  ],
-                    gridDelegate:SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                        childAspectRatio: 8 / 2,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 4,
-                    ), ),
+                  ], ),
               ),
               SizedBox(height: 10,),
               Row(

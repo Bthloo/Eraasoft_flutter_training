@@ -167,9 +167,10 @@ class _UpdateUserState extends State<UpdateUser> {
                             } else if (state is GetAllDepartmentFailState) {
                               return Text(state.message);
                             } else if (state is GetAllDepartmentSuccessState) {
+                              print(state.getAllDepartmentResponse.data?[4].name);
                               return DepartmentDropDown(
                                 controller: departmentController,
-                                list: state.getAllDepartmentResponse.data ?? [],
+                                list: state.getAllDepartmentResponse.data??[],
                                 label: 'Assign Department',
                               );
                             } else {

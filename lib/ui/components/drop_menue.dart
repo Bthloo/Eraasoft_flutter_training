@@ -13,12 +13,14 @@ class DefaultDropDown extends StatelessWidget {
   SingleValueDropDownController controller;
   String label;
   List<AllUsersData> list;
+  String? initialValue;
   DefaultDropDown({
     super.key,
     required this.controller,
     required this.label,
   //  required this.hint,
     required this.list,
+    this.initialValue
   });
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class DefaultDropDown extends StatelessWidget {
       controller: controller,
       // searchDecoration: InputDecoration(hintText: hint),
        enableSearch: true,
-
+      initialValue: initialValue,
       dropDownItemCount: list.length,
       dropDownList: list.map<DropDownValueModel>((value) {
         return DropDownValueModel(
