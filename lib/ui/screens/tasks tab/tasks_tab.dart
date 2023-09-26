@@ -30,7 +30,7 @@ class UsersTab extends StatelessWidget {
           if (state is GetAllDepartmentLoadingState) {
             return SizedBox(
               width: double.infinity,
-              height: 260,
+              height: double.infinity,
               child: Shimmer.fromColors(
                 baseColor: Colors.white,
                 highlightColor: Color(0xff5A55CA),
@@ -152,7 +152,7 @@ class UsersTab extends StatelessWidget {
                                     IconButton(
                                         onPressed: () {
                                           DialogUtilities.showMessage(context,
-                                              'Are you sure you want to Delete this task',
+                                              'Are you sure you want to Delete this Department',
                                               nigaiveActionName: 'Delete',
                                               nigaiveAction: () {
                                             deleteDepartment(
@@ -163,16 +163,19 @@ class UsersTab extends StatelessWidget {
                                                     -1,
                                                 token:
                                                     userProvider.token ?? '');
-                                          }, posstiveActionName: 'Yes');
+                                          }, posstiveActionName: 'No');
                                         },
                                         icon: Icon(Icons.delete_outline,
                                             color: Color(0xff7C808A)))
                                   ],
                                 ),
                               ),
+                              if(state.getAllDepartmentResponse.data?[index].manager?.name != null)
                               SizedBox(
-                                height: 144,
-                                width: 195,
+                              //  height: 144,
+                                height: MediaQuery.of(context).size.height*.18,
+                              // width: 195,
+                                width: MediaQuery.of(context).size.width*.45,
                                 child: UserItem(
                                   onTap: (){
                                     deleteUser(token: userProvider.token??'',
@@ -182,14 +185,14 @@ class UsersTab extends StatelessWidget {
                                   //email: 'dddddddddddddddddddddd',
                                   email: state.getAllDepartmentResponse
                                           .data?[index].manager?.email ??
-                                      "",
+                                      "Empty",
                                   employeeName: state.getAllDepartmentResponse
                                           .data?[index].manager?.name ??
-                                      'jj',
+                                      'Empty',
                                   phone: state.getAllDepartmentResponse
                                           .data?[index].manager?.phone
                                           .toString() ??
-                                      'jj',
+                                      'Empty',
                                   userType: 'Manager',
                                 ),
                               ),
@@ -202,11 +205,13 @@ class UsersTab extends StatelessWidget {
                                 itemCount: state.getAllDepartmentResponse
                                     .data?[index].employees?.length,
                                 gridDelegate:
-                                    const SliverGridDelegateWithMaxCrossAxisExtent(
-                                        maxCrossAxisExtent: 200,
-                                        childAspectRatio: 3 / 2,
-                                        crossAxisSpacing: 10,
-                                        mainAxisSpacing: 10),
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 4/3
+                                      //mainAxisExtent: 3/3
+                                    ),
                                 itemBuilder: (context, employeeIndex) {
                                   return UserItem(
                                     onTap:(){
@@ -219,26 +224,26 @@ class UsersTab extends StatelessWidget {
                                             .data?[index]
                                             .employees?[employeeIndex]
                                             .email ??
-                                        'jj',
+                                        'Empty',
                                     employeeName: state
                                             .getAllDepartmentResponse
                                             .data?[index]
                                             .employees?[employeeIndex]
                                             .name ??
-                                        'jj',
+                                        'Empty',
                                     phone: state
                                             .getAllDepartmentResponse
                                             .data?[index]
                                             .employees?[employeeIndex]
                                             .phone
                                             .toString() ??
-                                        'jj',
+                                        'Empty',
                                     userType: state
                                             .getAllDepartmentResponse
                                             .data?[index]
                                             .employees?[employeeIndex]
                                             .userType ??
-                                        'jj',
+                                        'Empty',
                                   );
                                 },
                               ),
@@ -304,8 +309,6 @@ class UsersTab extends StatelessWidget {
                       },
                       child: Container(),
                     ),
-
-
                     BlocListener<DeleteUserCubit,
                         DeleteUserViewState>(
                       bloc: deleteUserViewModel,

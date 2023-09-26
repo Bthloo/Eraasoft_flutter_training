@@ -27,6 +27,14 @@ import 'models/update users/UpdateUsersResponse.dart';
 
  class ApiManager{
 static const String baseUrl = 'tasksapp.integration25.com';
+
+
+
+
+
+
+
+
 static Future<LoginResponse>login({required String email,required String password}) async {
 var uri = Uri.https(baseUrl,'api/auth/login');
  var request = await http.post(uri,body:{
@@ -256,12 +264,13 @@ static Future<DeleteDepartmentResponse>deleteUser({required String token,require
 
 static Future<UpdateTaskResponse>updateTask({
  required String token,
- required String userId,
+ required String employeeId,
  required String description,
  required String name,
  required String startDate,
  required String endDate,
- required int taskId
+ required int taskId,
+ required String status,
 }) async {
  var uri = Uri.https(baseUrl,'api/task/update/$taskId',);
  var request = await http.post(uri,headers: {
@@ -269,8 +278,8 @@ static Future<UpdateTaskResponse>updateTask({
  },body: {
   'name' : '$name',
   'description' : "$description",
-  'status' : '0',
-  'employee_id' : "5",
+  'status' : '$status',
+  'employee_id' : "$employeeId",
   'start_date' : '$startDate',
   'end_date' : '$endDate',
 

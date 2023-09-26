@@ -56,17 +56,7 @@ class CustomDrawer extends StatelessWidget {
                 )),
 
             const Divider(),
-            InkWell(
-                onTap: (){
-                  Navigator.pushNamed(context, UpdateUser.routeName);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Update User',style: TextStyle(
-                      fontSize: 20
-                  ),),
-                )),
-            const Divider(),
+
             InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, AddNewTask.routeName);
@@ -79,16 +69,7 @@ class CustomDrawer extends StatelessWidget {
                 )),
             const Divider(),
 
-            InkWell(
-                onTap: (){
-                  Navigator.pushNamed(context, UserScreen.routeName);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Tasks Screen',style: TextStyle(
-                      fontSize: 20
-                  ),),
-                )),
+
           ],
         ),
       ),

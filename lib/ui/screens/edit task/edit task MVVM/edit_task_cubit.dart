@@ -9,25 +9,26 @@ class UpdateTaskCubit extends Cubit<UpdateTaskViewState>{
   UpdateTaskCubit(): super(UpdateTaskInitialState());
   Future<void> updateTask({
     required String name,
-    required String userId,
     required String token,
     required String description,
     required String startDay,
     required String endDate,
     required int taskId,
-
+    required String employeeId,
+    required String status
 
   }) async {
     emit(UpdateTaskLoadingState());
     try{
     var response = await ApiManager.updateTask(
+      employeeId: employeeId,
       description: description,
       endDate: endDate,
       startDate: startDay,
-      userId: userId,
       token: token,
       name: name,
-      taskId: taskId
+      taskId: taskId,
+      status: status
     );
     emit(UpdateTaskSuccessState(response));
       }on TimeoutException catch (ex) {

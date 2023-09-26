@@ -11,13 +11,24 @@ import 'MVVM/login_states.dart';
 import 'MVVM/login_cubit.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class LogInScreen extends StatelessWidget {
+class LogInScreen extends StatefulWidget {
    LogInScreen({super.key});
 static const String routeName = 'loginScreen';
+
+  @override
+  State<LogInScreen> createState() => _LogInScreenState();
+}
+
+class _LogInScreenState extends State<LogInScreen> {
   final formkey = GlobalKey<FormState>();
-  final emailController = TextEditingController(text: 'mab@mab.mab');
-  final passwordController = TextEditingController(text:'password');
+
+  final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
+
   var viewModel = LoginCubit();
+  bool keepMeLoginCheckBox = false;
+
   @override
   Widget build(BuildContext context) {
     AuthProvider userProvider = Provider.of<AuthProvider>(context,listen: false);
@@ -134,11 +145,27 @@ static const String routeName = 'loginScreen';
                     },
                   ),
                   SizedBox(height: 20,),
-                  CheckboxListTile(
-                    value: false,
-                    onChanged: (bool? value){},
-                    title: Text('Keep me logged in'),
-                  ), //Checkbox
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Checkbox(
+                  //       checkColor: Colors.white,
+                  //       value: keepMeLoginCheckBox,
+                  //       onChanged: (bool? value) {
+                  //         setState(() {
+                  //           keepMeLoginCheckBox = value!;
+                  //         });
+                  //       },
+                  //     ),
+                  //     Text(
+                  //       'Keep me logged in',
+                  //       style: TextStyle(
+                  //           color: Colors.black,
+                  //           fontSize:
+                  //           MediaQuery.of(context).textScaleFactor * 18),
+                  //     )
+                  //   ],
+                  // ),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -180,12 +207,11 @@ static const String routeName = 'loginScreen';
      }
      viewModel.login(
          email: emailController.text, password: passwordController.text);
-     
+
    }
 
    Future<void> writeSecureStorage(String? token) async {
       final storage = FlutterSecureStorage();
        await storage.write(key: 'token', value: token);
    }
-
 }

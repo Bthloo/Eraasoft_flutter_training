@@ -61,24 +61,27 @@ class AddNewTask extends StatelessWidget {
                 },
                 listener: (context, state) {
                   // event
-                  if (state is AddNewTaskFailState) {
+                  if(state is AddNewTaskFailState) {
                     // show message
                     DialogUtilities.showMessage(context, state.message,
                         posstiveActionName: "ok");
-                  } else if (state is AddNewTaskLoadingState) {
+                  }
+                  else if(state is AddNewTaskLoadingState) {
                     //show loading...
                     DialogUtilities.showLoadingDialog(context, "Loading...");
-                  } else if (state is AddNewTaskSuccessState) {
+                  }
+                  else if (state is AddNewTaskSuccessState) {
                     if (state.addNewTaskResponse.status == true) {
                       DialogUtilities.showMessage(context, state.addNewTaskResponse.message??'',
                           posstiveActionName: "ok", posstiveAction: () async {
                         Navigator.of(context)
                             .pushReplacementNamed(HomeSceen.routeName);
                       });
-                    } else if (state.addNewTaskResponse.status == false) {
+                    }
+                    else if (state.addNewTaskResponse.status == false) {
                       DialogUtilities.showMessage(
                         context,
-                        state.addNewTaskResponse.addTaskData!.name![0],
+                        state.addNewTaskResponse.message??'',
                         posstiveActionName: 'Ok',
                       );
                     }

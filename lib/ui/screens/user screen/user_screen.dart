@@ -41,70 +41,6 @@ class UserScreen extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: Color(0xffF3FAF9),
-        //APP BAR
-
-
-        // appBar: AppBar(
-        //
-        //   actions: [
-        //     CircularPercentIndicator(
-        //       radius: 28.0,
-        //       lineWidth: 8,
-        //       percent: .44,
-        //       center: Text(
-        //         '10/15',
-        //         style: TextStyle(color: Colors.black),
-        //       ),
-        //       progressColor: Color(0xff94C68D),
-        //       backgroundColor: Color(0xff94C68D).withOpacity(.5),
-        //     ),
-        //     SizedBox(
-        //       width: 20,
-        //     ),
-        //     CircularPercentIndicator(
-        //       radius: 28.0,
-        //       lineWidth: 8,
-        //       percent: .44,
-        //       center: Text(
-        //         '3/9',
-        //         style: TextStyle(color: Colors.black),
-        //       ),
-        //       progressColor: Color(0xffFBA85B),
-        //       backgroundColor: Color(0xffFBA85B).withOpacity(.5),
-        //     ),
-        //     SizedBox(
-        //       width: 20,
-        //     ),
-        //     CircularPercentIndicator(
-        //       radius: 28.0,
-        //       lineWidth: 8,
-        //       percent: .44,
-        //       center: Text(
-        //         '9/12',
-        //         style: TextStyle(color: Colors.black),
-        //       ),
-        //       progressColor: Color(0xffF87B7B),
-        //       backgroundColor: Color(0xffF87B7B).withOpacity(.5),
-        //     ),
-        //     SizedBox(
-        //       width: 20,
-        //     ),
-        //   ],
-        //   backgroundColor: Color(0xffF3FAF9),
-        //   centerTitle: false,
-        //   title: Column(
-        //     children: [
-        //       Text(
-        //         'Today',
-        //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        //       ),
-        //       Text(
-        //         '1/3/2023',
-        //         style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-        //       )
-        //     ],
-        //   ),
-        // ),
         body: BlocBuilder<GetAllTasksCubit, GetAllTasksViewState>(
           bloc: getAllTasksViewModel,
           builder: (context, getAllTaskState) {
@@ -327,7 +263,7 @@ class UserScreen extends StatelessWidget {
                                 getAllTaskState.getAllTasksResponse.data![index].status == 'expired' ?
                                 color = Color(0xFFF87B7B) :
                                 getAllTaskState.getAllTasksResponse.data![index].status == 'completed' ?
-                                color = Color(0xFF94C68D): color =Colors.white;
+                                color = Color(0xFF94C68D): color =Colors.red;
 
 
 
@@ -347,37 +283,37 @@ class UserScreen extends StatelessWidget {
                                       ));
                                 },
                                 child: TaskiWidget(
-                                  editOnTap: (){
-                                    Navigator.pushNamed(context, EditTask.routeName,
-                                        arguments: Arrgs(
-                                        index: index,
-                                        getTasksData: getAllTaskState
-                                            .getAllTasksResponse.data ?? []
-                                    ));
-                                    // showDialog(
-                                    //   barrierDismissible: true,
-                                    //     context: context,
-                                    //     builder: (context) {
-                                    //       return Dialog(
-                                    //         child: Container(
-                                    //           width: double.infinity,
-                                    //           child: Padding(
-                                    //             padding: const EdgeInsets.all(8.0),
-                                    //             child: Column(
-                                    //               children: [
-                                    //                 TextFormField(),
-                                    //                 SizedBox(height: 10,),
-                                    //
-                                    //
-                                    //               ],
-                                    //             ),
-                                    //           ),
-                                    //         )
-                                    //
-                                    //       );
-                                    //     },
-                                    // );
-                                  },
+                                // editOnTap: (){
+                                //     Navigator.pushNamed(context, EditTask.routeName,
+                                //         arguments: Arrgs(
+                                //         index: index,
+                                //         getTasksData: getAllTaskState
+                                //             .getAllTasksResponse.data ?? []
+                                //     ));
+                                //     // showDialog(
+                                //     //   barrierDismissible: true,
+                                //     //     context: context,
+                                //     //     builder: (context) {
+                                //     //       return Dialog(
+                                //     //         child: Container(
+                                //     //           width: double.infinity,
+                                //     //           child: Padding(
+                                //     //             padding: const EdgeInsets.all(8.0),
+                                //     //             child: Column(
+                                //     //               children: [
+                                //     //                 TextFormField(),
+                                //     //                 SizedBox(height: 10,),
+                                //     //
+                                //     //
+                                //     //               ],
+                                //     //             ),
+                                //     //           ),
+                                //     //         )
+                                //     //
+                                //     //       );
+                                //     //     },
+                                //     // );
+                                //   },
                                   color:color,
                                   onTap: () {
                                     DialogUtilities.showMessage(
@@ -390,7 +326,7 @@ class UserScreen extends StatelessWidget {
                                               .id ?? -1,
                                               token: userProvider.token ?? '');
                                         },
-                                        posstiveActionName: 'Yes'
+                                        posstiveActionName: 'No'
                                     );
                                   },
                                   name: getAllTaskState.getAllTasksResponse
@@ -534,8 +470,6 @@ class UserScreen extends StatelessWidget {
 
                 );
               }
-              print('succsess');
-              print(getAllTaskState.getAllTasksResponse.data?[1].name);
 
             } else {
               return Container();

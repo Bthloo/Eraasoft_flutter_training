@@ -12,7 +12,7 @@ class TaskiWidget extends StatelessWidget {
      required this.isVisible,
      required this.onTap,
      required this.color,
-     required this.editOnTap
+  //   required this.editOnTap
 
   });
 String status;
@@ -22,12 +22,13 @@ String startTime;
 String endTime;
 bool isVisible;
 Color color;
-Function() editOnTap;
+//Function() editOnTap;
 Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
+
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25)),
       elevation: 7,
@@ -55,9 +56,9 @@ Function() onTap;
                       icon: Icon(Icons.delete_outline)),
                 ),
 
-                IconButton(
-                    onPressed: editOnTap,
-                    icon: Icon(Icons.edit))
+                // IconButton(
+                //     onPressed: editOnTap,
+                //     icon: Icon(Icons.edit))
               ],
             ),
             Divider(),
@@ -73,6 +74,7 @@ Function() onTap;
                   width: 5,
                 ),
                 Column(
+
                   crossAxisAlignment:
                   CrossAxisAlignment.start,
                   children: [
@@ -87,7 +89,7 @@ Function() onTap;
                       height: 20,
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width*.85,
+                      width: MediaQuery.of(context).size.width*.8,
                       child: Text(
                         description,overflow: TextOverflow.ellipsis,
                         maxLines: 1,
