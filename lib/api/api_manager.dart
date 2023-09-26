@@ -11,6 +11,7 @@ import '../ui/screens/add department/add_department.dart';
 import 'models/add depart/AddDepartment.dart';
 import 'models/add department/AddDepartmentResponse.dart';
 import 'models/create user2/CreateUserr.dart';
+import 'models/delete department/delete_department_response.dart';
 import 'models/delete task/DeleteTaskResponse.dart';
 import 'models/get all department/GetAllDepartmentResponse.dart';
 import 'models/get all task/GetTaskResponse.dart';
@@ -21,10 +22,19 @@ import 'models/login/LoginResponse.dart';
 import 'models/logout model/LogoutResponse.dart';
 import 'models/update depart/UpdateDepartmentResponse.dart';
 import 'models/update department/UpdateDepartmentResponse.dart';
+import 'models/update task/UpdateTaskResponse.dart';
 import 'models/update users/UpdateUsersResponse.dart';
 
  class ApiManager{
 static const String baseUrl = 'tasksapp.integration25.com';
+
+
+
+
+
+
+
+
 static Future<LoginResponse>login({required String email,required String password}) async {
 var uri = Uri.https(baseUrl,'api/auth/login');
  var request = await http.post(uri,body:{
@@ -225,5 +235,60 @@ static Future<DeleteTaskResponse>deleteTask({required String token,required int 
  return deleteTask;
 
 }
+
+static Future<DeleteDepartmentResponse>deleteDepartment({required String token,required int departmentId}) async {
+ var uri = Uri.https(baseUrl,'api/department/delete/$departmentId',);
+ var request = await http.delete(uri,headers: {
+  HttpHeaders.authorizationHeader : "Bearer $token"
+ });
+
+ var deleteDepartment = DeleteDepartmentResponse.fromJson(jsonDecode(request.body));
+ return deleteDepartment;
+
+}
+
+
+static Future<DeleteDepartmentResponse>deleteUser({required String token,required int userId}) async {
+ var uri = Uri.https(baseUrl,'api/user/delete/$userId',);
+ var request = await http.delete(uri,headers: {
+  HttpHeaders.authorizationHeader : "Bearer $token"
+ });
+
+ var deleteDepartment = DeleteDepartmentResponse.fromJson(jsonDecode(request.body));
+ return deleteDepartment;
+
+}
+
+
+
+
+static Future<UpdateTaskResponse>updateTask({
+ required String token,
+ required String employeeId,
+ required String description,
+ required String name,
+ required String startDate,
+ required String endDate,
+ required int taskId,
+ required String status,
+}) async {
+ var uri = Uri.https(baseUrl,'api/task/update/$taskId',);
+ var request = await http.post(uri,headers: {
+  HttpHeaders.authorizationHeader : "Bearer $token"
+ },body: {
+  'name' : '$name',
+  'description' : "$description",
+  'status' : '$status',
+  'employee_id' : "$employeeId",
+  'start_date' : '$startDate',
+  'end_date' : '$endDate',
+
+ });
+
+ var updateTask = UpdateTaskResponse.fromJson(jsonDecode(request.body));
+ return updateTask;
+
+}
+
 
 }

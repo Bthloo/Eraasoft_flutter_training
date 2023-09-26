@@ -122,7 +122,7 @@ assign a manager to start the work!''',
                           } else if (state is GetAllDepartmentSuccessState) {
                             return DepartmentDropDown(
                               controller: departmentNameController,
-                              list: state.getAllDepartmentResponse.data ?? [],
+                              list: state.getAllDepartmentResponse.data?? [],
                               label: 'Select Department',
                             );
                           } else {

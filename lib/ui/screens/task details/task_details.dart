@@ -1,12 +1,18 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:task_management_erra_soft_training/ui/components/custom_form_field.dart';
 import 'package:task_management_erra_soft_training/ui/screens/task%20details/task_status.dart';
 import 'package:task_management_erra_soft_training/ui/screens/user%20screen/user_screen.dart';
 
 import '../../../api/models/create user/CreateUserResponse.dart';
 import '../../../providers/auth_provider.dart';
+import '../../components/dialog.dart';
+import '../edit task/edit task MVVM/edit_task_cubit.dart';
+import '../edit task/edit task MVVM/edit_task_states.dart';
+import '../home screen/home_screen.dart';
 import '../user screen/get all tasks MVVM/get_all_tasks_states.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
@@ -18,19 +24,39 @@ static const String routeName = "TaskDetailsScreen";
 }
 
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
- late TaskStatus taskStatus = TaskStatus.newTask;
- bool isVisible = true;
+  TaskStatus taskStatus = TaskStatus.newTask;
+var titleController = TextEditingController();
+ var descriptionController = TextEditingController();
+var updateViewModel = UpdateTaskCubit();
+  final formKey = GlobalKey<FormState>();
 
+ @override
+  void initState() {
+   super.initState();
+   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+     Arrgs arrgs = ModalRoute
+         .of(context)!
+         .settings
+         .arguments as Arrgs;
+     checkTaskStatus(arrgs);
+     titleController.text = arrgs.getTasksData[arrgs.index].name ?? '';
+     descriptionController.text =
+         arrgs.getTasksData[arrgs.index].description ?? '';
+
+   print(taskStatus.index);
+   setState(() {
+
+   });
+
+
+   });
+  }
   @override
   Widget build(BuildContext context) {
     Arrgs arrgs = ModalRoute.of(context)!.settings.arguments as Arrgs;
-    checkTaskStatus(arrgs);
+
     AuthProvider userProvider = Provider.of<AuthProvider>(context,listen: false);
-    if(userProvider.userType == 'admin'){
-      isVisible = true;
-    }else{
-      isVisible = false;
-    }
+
 
     return Scaffold(
       backgroundColor: Color(0xffF3FAF9),
@@ -94,253 +120,525 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10,),
-              Text(arrgs.getTasksData[arrgs.index].name??''
-                ,style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800
-              ),),
-              Visibility(
-                maintainSize: true,
-                maintainAnimation: true,
-                maintainState: true,
-                visible: isVisible,
-                child: TextButton(
-                    onPressed: (){},
-                    child: Text('Tap to Edit',style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      color: Colors.grey
-                    ),),),
-              ),
-              SizedBox(height: 10,),
-              Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.all(Radius.circular(25))
-                ),
-              ),
-              SizedBox(height: 20,),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Assigned by',style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey
-                      ),),
-                      Text(arrgs.getTasksData[arrgs.index].creator?.name??'',style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+      body: BlocConsumer<UpdateTaskCubit,UpdateTaskViewState>(
+        bloc: updateViewModel,
+        listenWhen: (previous, current) {
+          if (previous is UpdateTaskLoadingState) {
+            DialogUtilities.hideDialog(context);
+          }
+          if (current is UpdateTaskSuccessState ||
+              current is UpdateTaskLoadingState ||
+              current is UpdateTaskFailState) {
+            return true;
+          }
+          return false;
+        },
+        buildWhen: (previous, current) {
+          if (current is UpdateTaskInitialState) return true;
+          return false;
+        },
+        listener: (context, state) {
+          // event
+          if (state is UpdateTaskFailState) {
+            // show message
+            DialogUtilities.showMessage(
+                context,
+                state.message,
+                posstiveActionName: "ok");
+          }
+          else if (state is UpdateTaskLoadingState) {
+            //show loading...
+            DialogUtilities.showLoadingDialog(
+                context,
+                "Loading...");
+          }
+          else if (state is UpdateTaskSuccessState) {
+            if (state.updateTaskResponse.status == true) {
 
-                      ),),
-                    ],
+              DialogUtilities.showMessage(context, "Updated Successfully",
+                  posstiveActionName: "ok", posstiveAction: () async {
 
-                  ),
-                  Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Due Date',style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey
-                      ),),
-                      Text(arrgs.getTasksData[arrgs.index].enddate??'',style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Navigator.of(context)
+                        .pushReplacementNamed(HomeSceen.routeName);
+                  });
+            } else if (state.updateTaskResponse.status == false) {
+              DialogUtilities.showMessage(
+                context,
+                " ${state.updateTaskResponse.message}",
+                posstiveActionName: 'Ok',
+              );
+            }
+            // show dialog
+            // navigate to home screen
+          }
+        },
 
-                      ),),
 
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height:20,),
-              SizedBox(
-                height: 160,
-                child: GridView(
-                  physics: NeverScrollableScrollPhysics(),
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 10,),
+                    if(userProvider.userType == 'admin'|| userProvider.userType == 'manager')
+                      CustomFormField(controller: titleController,
+                        hintlText: 'Edit',
+                        validator: (text) {
+                          if(text!.isEmpty){
+                            return 'Please Enter Task Title';
+                          }
+                          return null;
+                        },
+
+                      )
+
+                    else
+                      Text(titleController.text
+                        ,style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800
+                        ),),
+
+                    SizedBox(height: 10,),
                     Container(
+                      child: Center(child: Text('Image')),
+                      height: 200,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all()),
-                      child: Row(
-                        children: [
-                          Radio<TaskStatus>(
-                            value: TaskStatus.newTask,
-                            groupValue: taskStatus,
-                            onChanged: (value) {
-                              setState(() {
-                                taskStatus = value!;
-                              });
-                            },
-                          ),
-                          const Text('New'),
-                          const SizedBox(
-                            width: 20,
-                          )
-                        ],
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.all(Radius.circular(25))
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all()),
-                      child: Row(
-                        children: [
-                          Radio<TaskStatus>(
-                            value: TaskStatus.processing,
-                            groupValue: taskStatus,
-                            onChanged: (value) {
-                              setState(() {
-                                taskStatus = value!;
-                              });
-                            },
-                          ),
-                          const Text('Processing'),
-                          const SizedBox(
-                            width: 20,
-                          )
-                        ],
-                      ),
+                    SizedBox(height: 20,),
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Assigned by',style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey
+                            ),),
+                            Text(arrgs.getTasksData[arrgs.index].creator?.name??'',style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+
+                            ),),
+                          ],
+
+                        ),
+                        Spacer(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Due Date',style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey
+                            ),),
+                            Text(arrgs.getTasksData[arrgs.index].enddate??'',style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+
+                            ),),
+
+                          ],
+                        ),
+                      ],
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all()),
-                      child: Row(
+                    SizedBox(height:20,),
+
+
+                    //
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Container(
+                    //       height: MediaQuery.of(context).size.height * 0.05,
+                    //       width: MediaQuery.of(context).size.width * 0.30,
+                    //       decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(6),
+                    //           border: Border.all()),
+                    //       child: Center(
+                    //         child: Row(
+                    //           children: [
+                    //             Radio<TaskStatus>(
+                    //               value: TaskStatus.newTask,
+                    //               groupValue: taskStatus,
+                    //               onChanged: (value) {
+                    //                 setState(() {
+                    //                   taskStatus = value!;
+                    //                 });
+                    //               },
+                    //             ),
+                    //             const Text(
+                    //               'NEW',
+                    //               style: TextStyle(fontSize: 10),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     Container(
+                    //       height: MediaQuery.of(context).size.height * 0.05,
+                    //       width: MediaQuery.of(context).size.width * 0.30,
+                    //       decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(6),
+                    //           border: Border.all()),
+                    //       child: Row(
+                    //         children: [
+                    //           Radio<TaskStatus>(
+                    //             value: TaskStatus.processing,
+                    //             groupValue: taskStatus,
+                    //             onChanged: (value) {
+                    //               setState(() {
+                    //                 taskStatus = value!;
+                    //               });
+                    //             },
+                    //           ),
+                    //           const Text(
+                    //             'PROCCESSING',
+                    //             style: TextStyle(fontSize: 10),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     Container(
+                    //       height: MediaQuery.of(context).size.height * 0.05,
+                    //       width: MediaQuery.of(context).size.width * 0.30,
+                    //       decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(6),
+                    //           border: Border.all()),
+                    //       child: Row(
+                    //         children: [
+                    //           Radio<TaskStatus>(
+                    //             value: TaskStatus.canceled,
+                    //             groupValue: taskStatus,
+                    //             onChanged: (value) {
+                    //               setState(() {
+                    //                 taskStatus = value!;
+                    //               });
+                    //             },
+                    //           ),
+                    //           const Text(
+                    //             'CANCELED',
+                    //             style: TextStyle(fontSize: 10),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Container(
+                    //       height: MediaQuery.of(context).size.height * 0.05,
+                    //       width: MediaQuery.of(context).size.width * 0.30,
+                    //       decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(6),
+                    //           border: Border.all()),
+                    //       child: Center(
+                    //         child: Row(
+                    //           children: [
+                    //             Radio<TaskStatus>(
+                    //               value: TaskStatus.completed,
+                    //               groupValue: taskStatus,
+                    //               onChanged: (value) {
+                    //                 setState(() {
+                    //                   taskStatus = value!;
+                    //                 });
+                    //               },
+                    //             ),
+                    //             const Text(
+                    //               'COMPLETED',
+                    //               style: TextStyle(fontSize: 10),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     Container(
+                    //       height: MediaQuery.of(context).size.height * 0.05,
+                    //       width: MediaQuery.of(context).size.width * 0.30,
+                    //       decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(6),
+                    //           border: Border.all()),
+                    //       child: Row(
+                    //         children: [
+                    //           Radio<TaskStatus>(
+                    //             value: TaskStatus.notCompleted,
+                    //             groupValue: taskStatus,
+                    //             onChanged: (value) {
+                    //               setState(() {
+                    //                 taskStatus = value!;
+                    //               });
+                    //             },
+                    //           ),
+                    //           const Text(
+                    //             'NOTCOMPLETED',
+                    //             style: TextStyle(fontSize: 9),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     Container(
+                    //       height: MediaQuery.of(context).size.height * 0.05,
+                    //       width: MediaQuery.of(context).size.width * 0.30,
+                    //       decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(6),
+                    //           border: Border.all()),
+                    //       child: Row(
+                    //         children: [
+                    //           Radio<TaskStatus>(
+                    //             value: TaskStatus.expired,
+                    //             groupValue: taskStatus,
+                    //             onChanged: (value) {
+                    //               setState(() {
+                    //                 taskStatus = value!;
+                    //               });
+                    //             },
+                    //           ),
+                    //           const Text(
+                    //             'EXPIRED',
+                    //             style: TextStyle(fontSize: 10),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+
+
+
+                    SizedBox(
+                      height: 160,
+                      child: GridView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 8 / 2,
+                          crossAxisSpacing: 4,
+                          mainAxisSpacing: 4,
+                        ),
                         children: [
-                          Radio<TaskStatus>(
-                            value: TaskStatus.canceled,
-                            groupValue: taskStatus,
-                            onChanged: (value) {
-                              setState(() {
-                                taskStatus = value!;
-                              });
-                            },
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all()),
+                            child: Row(
+                              children: [
+                                Radio<TaskStatus>(
+                                  value: TaskStatus.newTask,
+                                  groupValue: taskStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      taskStatus = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('New'),
+                                const SizedBox(
+                                  width: 20,
+                                )
+                              ],
+                            ),
                           ),
-                          const Text('Canceled'),
-                          const SizedBox(
-                            width: 20,
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all()),
+                            child: Row(
+                              children: [
+                                Radio<TaskStatus>(
+                                  value: TaskStatus.processing,
+                                  groupValue: taskStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      taskStatus = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Processing'),
+                                const SizedBox(
+                                  width: 20,
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all()),
+                            child: Row(
+                              children: [
+                                Radio<TaskStatus>(
+                                  value: TaskStatus.canceled,
+                                  groupValue: taskStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      taskStatus = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Canceled'),
+                                const SizedBox(
+                                  width: 20,
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all()),
+                            child: Row(
+                              children: [
+                                Radio<TaskStatus>(
+                                  value: TaskStatus.completed,
+                                  groupValue: taskStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      taskStatus = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Completed'),
+                                const SizedBox(
+                                  width: 20,
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all()),
+                            child: Row(
+                              children: [
+                                Radio<TaskStatus>(
+                                  value: TaskStatus.notCompleted,
+                                  groupValue: taskStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      taskStatus = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Not Completed'),
+                                const SizedBox(
+                                  width: 20,
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all()),
+                            child: Row(
+                              children: [
+                                Radio<TaskStatus>(
+                                  value: TaskStatus.expired,
+                                  groupValue: taskStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      taskStatus = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Expired'),
+                                const SizedBox(
+                                  width: 20,
+                                )
+                              ],
+                            ),
                           )
-                        ],
-                      ),
+
+                        ], ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all()),
-                      child: Row(
-                        children: [
-                          Radio<TaskStatus>(
-                            value: TaskStatus.completed,
-                            groupValue: taskStatus,
-                            onChanged: (value) {
-                              setState(() {
-                                taskStatus = value!;
-                              });
-                            },
+                    SizedBox(height: 10,),
+                    Text('Description',style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500
+                    ),),
+                    if(userProvider.userType == 'admin'|| userProvider.userType == 'manager')
+                      CustomFormField(controller: descriptionController,
+                        hintlText: 'Edit',
+
+                        validator: (text) {
+                          if(text!.isEmpty){
+                            return 'Please Enter Description';
+                          }
+                          return null;
+                        },
+
+                      )
+
+                    else
+                      Text(arrgs.getTasksData[arrgs.index].description??''
+                        ,style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800
+                        ),),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (formKey.currentState?.validate() == false) {
+                            return;
+                          }
+                          updateViewModel.updateTask(
+                            status: '${taskStatus.index}',
+                              name: titleController.text,
+                              employeeId:' ${arrgs.getTasksData[arrgs.index].employee?.id}',
+                              token: userProvider.token??'',
+                              description: descriptionController.text,
+                              startDay: '${arrgs.getTasksData[arrgs.index].startdate}',
+                              endDate: '${arrgs.getTasksData[arrgs.index].enddate}',
+                              taskId: arrgs.getTasksData[arrgs.index].id??-1);
+                        },
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.symmetric(vertical: 17.0),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                                color: Colors.white, fontSize: 14),
                           ),
-                          const Text('Completed'),
-                          const SizedBox(
-                            width: 20,
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all()),
-                      child: Row(
-                        children: [
-                          Radio<TaskStatus>(
-                            value: TaskStatus.notCompleted,
-                            groupValue: taskStatus,
-                            onChanged: (value) {
-                              setState(() {
-                                taskStatus = value!;
-                              });
-                            },
-                          ),
-                          const Text('Not Completed'),
-                          const SizedBox(
-                            width: 20,
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all()),
-                      child: Row(
-                        children: [
-                          Radio<TaskStatus>(
-                            value: TaskStatus.expired,
-                            groupValue: taskStatus,
-                            onChanged: (value) {
-                              setState(() {
-                                taskStatus = value!;
-                              });
-                            },
-                          ),
-                          const Text('Expired'),
-                          const SizedBox(
-                            width: 20,
-                          )
-                        ],
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll(
+                                Theme.of(context).primaryColor),
+                            shape: MaterialStatePropertyAll(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(4))))),
                       ),
                     )
 
+
                   ],
-                    gridDelegate:SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
-                        childAspectRatio: 8 / 2,
-                        crossAxisSpacing: 4,
-                        mainAxisSpacing: 4,
-                    ), ),
+                ),
               ),
-              SizedBox(height: 10,),
-              Row(
-                children: [
-                  Text('Description',style: TextStyle(
-                  fontSize: 20,
-                    fontWeight: FontWeight.w500
-              ),),
-                  TextButton(
-                      onPressed: (){},
-                      child:  Text('Tap to Edit',style: TextStyle(
-                        color: Colors.grey
-                      ),))
-                ],
-              ),
-              Text(arrgs.getTasksData[arrgs.index].description??'',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 18
-              ),
-              )
+            ),
+          );
+        },
 
 
-            ],
-          ),
-        ),
       ),
     );
   }
+
 
   void checkTaskStatus(Arrgs arrgs){
 

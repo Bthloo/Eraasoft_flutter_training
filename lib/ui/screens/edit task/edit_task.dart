@@ -15,73 +15,113 @@ import '../update department/get all department MVVM/get_all_department_cubit.da
 import '../update department/get all department MVVM/get_all_department_states.dart';
 import '../update user/get all user MVVM/get_all_users_states.dart';
 import '../update user/get all user MVVM/get_users_cubit.dart';
-import 'add new task MVVM/add_new_task_states.dart';
+import '../user screen/user_screen.dart';
+import 'edit task MVVM/edit_task_cubit.dart';
+import 'edit task MVVM/edit_task_states.dart';
 
-class AddNewTask extends StatelessWidget {
-  AddNewTask({super.key});
-  static const routeName = "AddNewTask";
-  final titleController = TextEditingController();
+class EditTask extends StatefulWidget {
+  EditTask({super.key});
+  static const routeName = "editTask";
+
+  @override
+  State<EditTask> createState() => _EditTaskState();
+}
+
+class _EditTaskState extends State<EditTask> {
+  String userDropDownInitial = '';
+  var titleController = TextEditingController();
+  var descriptionController = TextEditingController();
+  var dropDownName = '';
+  var dropDownId = 0;
+  //late TextEditingController nameController;
+ SingleValueDropDownController usersController = SingleValueDropDownController();
+ // late SingleValueDropDownController usersController;
+   DateRangePickerController datePikerController =DateRangePickerController();
+  @override
+  void initState() {
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp){
+      Arrgs arrgs = ModalRoute.of(context)!.settings.arguments as Arrgs;
+      dropDownName = arrgs.getTasksData[arrgs.index].employee?.name??'';
+      dropDownId = arrgs.getTasksData[arrgs.index].employee?.id??-1;
+      usersController =  usersController.setDropDown(DropDownValueModel(name: dropDownName, value: dropDownId));
+
+      titleController.text = arrgs.getTasksData[arrgs.index].name??'rrr';
+      descriptionController.text = arrgs.getTasksData[arrgs.index].description??"";
+
+    });
+
+
+
+    super.initState();
+  }
+
   final formkey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
+
+
+
   var getAllDepartment = GetAllDepartmentCubit();
+
   var getAllUserViewModel = GetAllUsersCubit();
-  var addNewTaskViewModel = AddNewTaskCubit();
-  SingleValueDropDownController usersController =
-      SingleValueDropDownController();
-  DateRangePickerController datePikerController = DateRangePickerController();
+
+  var updateTaskViewModel = UpdateTaskCubit();
+
+
+
   @override
   Widget build(BuildContext context) {
-    AuthProvider userProvider =
-        Provider.of<AuthProvider>(context, listen: false);
-    getAllUserViewModel.getAllUsers(token: userProvider.token ?? '');
 
+
+
+    Arrgs arrgs = ModalRoute.of(context)!.settings.arguments as Arrgs;
+    AuthProvider userProvider =
+    Provider.of<AuthProvider>(context, listen: false);
+    getAllUserViewModel.getAllUsers(token: userProvider.token ?? '');
+    titleController.text = arrgs.getTasksData[arrgs.index].name??'rrr';
+    descriptionController.text = arrgs.getTasksData[arrgs.index].description??"";
     return Scaffold(
         appBar: AppBar(),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: formkey,
-            child: BlocConsumer<AddNewTaskCubit, AddNewTaskViewState>(
-                bloc: addNewTaskViewModel,
+            child: BlocConsumer<UpdateTaskCubit, UpdateTaskViewState>(
+                bloc: updateTaskViewModel,
                 listenWhen: (previous, current) {
-                  if (previous is AddNewTaskLoadingState) {
+                  if (previous is UpdateTaskLoadingState) {
                     DialogUtilities.hideDialog(context);
                   }
-                  if (current is AddNewTaskSuccessState ||
-                      current is AddNewTaskLoadingState ||
-                      current is AddNewTaskFailState) {
+                  if (current is UpdateTaskSuccessState ||
+                      current is UpdateTaskLoadingState ||
+                      current is UpdateTaskFailState) {
                     return true;
                   }
                   return false;
                 },
                 buildWhen: (previous, current) {
-                  if (current is AddNewTaskInitialState) return true;
+                  if (current is UpdateTaskInitialState) return true;
                   return false;
                 },
                 listener: (context, state) {
                   // event
-                  if(state is AddNewTaskFailState) {
+                  if (state is UpdateTaskFailState) {
                     // show message
                     DialogUtilities.showMessage(context, state.message,
                         posstiveActionName: "ok");
-                  }
-                  else if(state is AddNewTaskLoadingState) {
+                  } else if (state is UpdateTaskLoadingState) {
                     //show loading...
                     DialogUtilities.showLoadingDialog(context, "Loading...");
-                  }
-                  else if (state is AddNewTaskSuccessState) {
-                    if (state.addNewTaskResponse.status == true) {
-                      DialogUtilities.showMessage(context, state.addNewTaskResponse.message??'',
+                  } else if (state is UpdateTaskSuccessState) {
+                    if (state.updateTaskResponse.status == true) {
+                      DialogUtilities.showMessage(context, state.updateTaskResponse.message??'',
                           posstiveActionName: "ok", posstiveAction: () async {
-                        Navigator.of(context)
-                            .pushReplacementNamed(HomeSceen.routeName);
-                      });
-                    }
-                    else if (state.addNewTaskResponse.status == false) {
+                            Navigator.of(context)
+                                .pushReplacementNamed(HomeSceen.routeName);
+                          });
+                    } else if (state.updateTaskResponse.status == false) {
                       DialogUtilities.showMessage(
                         context,
-                        state.addNewTaskResponse.message??'',
+                        state.updateTaskResponse.message??'',
                         posstiveActionName: 'Ok',
                       );
                     }
@@ -93,7 +133,7 @@ class AddNewTask extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Add Task!',
+                          'Update Task!',
                           style: TextStyle(
                               fontSize: 34, fontWeight: FontWeight.bold),
                         ),
@@ -103,7 +143,7 @@ class AddNewTask extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           child: Text(
-                            '''Create a new task now and assign it 
+                            '''Update a task now and assign it 
           to employees right away.''',
                             style: TextStyle(
                                 fontSize: 16,
@@ -114,15 +154,15 @@ class AddNewTask extends StatelessWidget {
                         SizedBox(
                           height: 20,
                         ),
-                        SfDateRangePicker(
-                            controller: datePikerController,
-                            selectionColor: Color(0xff091E4A),
-                            view: DateRangePickerView.month,
-                            monthViewSettings: DateRangePickerMonthViewSettings(
-                                firstDayOfWeek: 6),
-                            selectionMode: DateRangePickerSelectionMode.range,
-                            showActionButtons: true,
-                            onCancel: () {}),
+                        // SfDateRangePicker(
+                        //     controller: datePikerController,
+                        //     selectionColor: Color(0xff091E4A),
+                        //     view: DateRangePickerView.month,
+                        //     monthViewSettings: DateRangePickerMonthViewSettings(
+                        //         firstDayOfWeek: 6),
+                        //     selectionMode: DateRangePickerSelectionMode.range,
+                        //     showActionButtons: true,
+                        //     onCancel: () {}),
                         SizedBox(
                           height: 20,
                         ),
@@ -166,7 +206,8 @@ class AddNewTask extends StatelessWidget {
                               return Text(state.message);
                             } else if (state is GetAllUsersSuccessState) {
                               return DefaultDropDown(
-                                controller: usersController,
+                               // initialValue: 'userDropDownInitia',
+                                controller:usersController,
                                 list: state.getAllUsersResponse.data ?? [],
                                 label: 'Select User',
                               );
@@ -182,13 +223,13 @@ class AddNewTask extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              addTask(userProvider.token??'');
+                              //addTask(userProvider.token??'',2);
                             },
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 17.0),
+                              const EdgeInsets.symmetric(vertical: 17.0),
                               child: Text(
-                                'Create',
+                                'Update',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 14),
                               ),
@@ -209,20 +250,21 @@ class AddNewTask extends StatelessWidget {
           ),
         ));
   }
-
-  void addTask(String token) async {
-    if (formkey.currentState?.validate() == false) {
-      return;
-    }
-    addNewTaskViewModel.addNewTask(
-        token: token,
-        userId: '${usersController.dropDownValue?.value.toString()}',
-        name: titleController.text,
-        description: descriptionController.text,
-        startDay:
-            "${datePikerController.selectedRange?.startDate?.year}-${datePikerController.selectedRange?.startDate?.month}-${datePikerController.selectedRange?.startDate?.day}",
-        endDate:
-            "${datePikerController.selectedRange?.endDate?.year}-${datePikerController.selectedRange?.endDate?.month}-${datePikerController.selectedRange?.endDate?.day}");
-    print("${datePikerController.selectedRange?.endDate?.year}-${datePikerController.selectedRange?.endDate?.month}-${datePikerController.selectedRange?.endDate?.day}");
-  }
+  //
+  // void addTask(String token,int taskId) async {
+  //   if (formkey.currentState?.validate() == false) {
+  //     return;
+  //   }
+  //   updateTaskViewModel.updateTask(
+  //     taskId: taskId,
+  //       token: token,
+  //       userId: '${usersController.dropDownValue?.value.toString()}',
+  //       name: titleController.text,
+  //       description: descriptionController.text,
+  //       startDay:
+  //       "${datePikerController.selectedRange?.startDate?.year}-${datePikerController.selectedRange?.startDate?.month}-${datePikerController.selectedRange?.startDate?.day}",
+  //       endDate:
+  //       "${datePikerController.selectedRange?.endDate?.year}-${datePikerController.selectedRange?.endDate?.month}-${datePikerController.selectedRange?.endDate?.day}");
+  //   print("${datePikerController.selectedRange?.endDate?.year}-${datePikerController.selectedRange?.endDate?.month}-${datePikerController.selectedRange?.endDate?.day}");
+  // }
 }
